@@ -303,7 +303,7 @@ module draw_battbox_zeee5200_lid(batt_lid_attach="pins") {
  */
 
 module draw_battbox_urgenex2000(lidmount="pins") {
-    draw_battboxH_biglipo(37+1, 19+1, 55, 70, 8, lidmount="pins");
+    draw_battboxH_biglipo(37+1, 18+1, 55, 70, 8, lidmount="pins");
 }
 
 module draw_battbox_urgenex2000_lid(batt_lid_attach="pins") {
