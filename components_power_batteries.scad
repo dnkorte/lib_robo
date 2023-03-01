@@ -401,35 +401,36 @@ module draw_battboxH_biglipo(batt_width, batt_thick, box_len, clip_distance, cli
  */
 module draw_battboxH_lid_biglipo(batt_width, box_len, lidmount="pins") {
     wall_thick = 2;
+    lid_thick = 2;
 
     outerwidth  = batt_width + (2*wall_thick);
     centerline = outerwidth / 2;
 
     difference() {
         union() {
-            cube([ (box_len + wall_thick), outerwidth,  2 ]);
+            cube([ (box_len + wall_thick), outerwidth,  lid_thick ]);
             if (lidmount == "pins") {
-                translate([ wall_thick + 8, -2, 0 ]) bb_mount_lid_pinstyle(2, "adds");
-                translate([ wall_thick + 8, outerwidth + 2, 0 ]) bb_mount_lid_pinstyle(2, "adds");
-                translate([ box_len + wall_thick - 8, -2, 0 ]) bb_mount_lid_pinstyle(2, "adds");
-                translate([ box_len + wall_thick - 8, outerwidth + 2, 0 ]) bb_mount_lid_pinstyle(2, "adds");
+                translate([ wall_thick + 8, -2, 0 ]) bb_mount_lid_pinstyle(lid_thick, "adds");
+                translate([ wall_thick + 8, outerwidth + 2, 0 ]) bb_mount_lid_pinstyle(lid_thick, "adds");
+                translate([ box_len + wall_thick - 8, -2, 0 ]) bb_mount_lid_pinstyle(lid_thick, "adds");
+                translate([ box_len + wall_thick - 8, outerwidth + 2, 0 ]) bb_mount_lid_pinstyle(lid_thick, "adds");
             } else {        
-                translate([ wall_thick + 8, -2, 0 ]) bb_mount_lid(2, "adds");
-                translate([ wall_thick + 8, outerwidth + 2, 0 ]) bb_mount_lid(2, "adds");
-                translate([ box_len + wall_thick - 8, -2, 0 ]) bb_mount_lid(2, "adds");
-                translate([ box_len + wall_thick - 8, outerwidth + 2, 0 ]) bb_mount_lid(2, "adds");
+                translate([ wall_thick + 8, -2, 0 ]) bb_mount_lid(lid_thick, "adds");
+                translate([ wall_thick + 8, outerwidth + 2, 0 ]) bb_mount_lid(lid_thick, "adds");
+                translate([ box_len + wall_thick - 8, -2, 0 ]) bb_mount_lid(lid_thick, "adds");
+                translate([ box_len + wall_thick - 8, outerwidth + 2, 0 ]) bb_mount_lid(lid_thick, "adds");
             }
         }
         if (lidmount == "pins") {
-            translate([ wall_thick + 8, -2, 0 ]) bb_mount_lid_pinstyle(2, "holes");
-            translate([ wall_thick + 8, outerwidth + 2, 0 ]) bb_mount_lid_pinstyle(2, "holes");
-            translate([ box_len + wall_thick - 8, -2, 0 ]) bb_mount_lid_pinstyle(2, "holes");
-            translate([ box_len + wall_thick - 8, outerwidth + 2, 0 ]) bb_mount_lid_pinstyle(2, "holes");
+            translate([ wall_thick + 8, -2, 0 ]) bb_mount_lid_pinstyle(lid_thick, "holes");
+            translate([ wall_thick + 8, outerwidth + 2, 0 ]) bb_mount_lid_pinstyle(lid_thick, "holes");
+            translate([ box_len + wall_thick - 8, -2, 0 ]) bb_mount_lid_pinstyle(lid_thick, "holes");
+            translate([ box_len + wall_thick - 8, outerwidth + 2, 0 ]) bb_mount_lid_pinstyle(lid_thick, "holes");
         } else {        
-            translate([ wall_thick + 8, -2, 0 ]) bb_mount_lid(2, "holes");
-            translate([ wall_thick + 8, outerwidth + 2, 0 ]) bb_mount_lid(2, "holes");
-            translate([ box_len + wall_thick - 8, -2, 0 ]) bb_mount_lid(2, "holes");
-            translate([ box_len + wall_thick - 8, outerwidth + 2, 0 ]) bb_mount_lid(2, "holes");
+            translate([ wall_thick + 8, -2, 0 ]) bb_mount_lid(lid_thick, "holes");
+            translate([ wall_thick + 8, outerwidth + 2, 0 ]) bb_mount_lid(lid_thick, "holes");
+            translate([ box_len + wall_thick - 8, -2, 0 ]) bb_mount_lid(lid_thick, "holes");
+            translate([ box_len + wall_thick - 8, outerwidth + 2, 0 ]) bb_mount_lid(lid_thick, "holes");
         }
     }
 }
@@ -468,9 +469,9 @@ module bb_mount_pillar_pinstyle(height) {
 
 module bb_mount_lid_pinstyle(thick, mode="adds") {
     if (mode == "adds") {
-        roundedbox(10, 10, 2, thick);
+        roundedbox(11, 11, 2, thick);
     } else {
-        translate([ 0, 0, -0.1 ]) cylinder(d=6, h=thick+0.2);
+        translate([ 0, 0, -0.1 ]) cylinder(d=6.5, h=thick+0.2);
     }
 }
 
