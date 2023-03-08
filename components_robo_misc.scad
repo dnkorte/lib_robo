@@ -285,6 +285,11 @@ module component_terminal_block_2to4(mode="holes") {
 }
 
 pwr_panel_tall = 40;
+
+/*
+ * part_hanging_power_hub() generates a hanging sidewall with power components
+ */
+
 module part_hanging_power_hub() {
     panel_wide = pwrhub_mount_sep + 20;
     panel_thick = 3;
@@ -302,8 +307,7 @@ module part_hanging_power_hub() {
             translate([ -panel_wide/2, 0, 0 ]) cube([ panel_wide, panel_thick, pwr_panel_tall ]);
             translate([ 48, panel_thick+1, centerline_for_tmnblk ]) rotate([ 90, 0, 0 ]) component_terminal_block_2to4("adds");
             translate([ -45, panel_thick+1, centerline_for_tmnblk ]) rotate([ 90, 0, 0 ]) roundedbox(37, 32, 2, 1); // for ESC
-            //cube([ panel_wide, panel_thick, pwrhub_underbody_connector_depth ]);
-            //cube([ panel_wide, panel_thick+pwrhub_depth_stop_thick, pwrhub_depth_stop_distance ]);
+
             // tubes for mounting holes (threaded inserts)
             translate([ pwrhub_mount_sep/2, body_lip_width/2, pwr_panel_tall-7 ]) cylinder(d=TI30_mount_diameter, h=7);
             translate([ -pwrhub_mount_sep/2, body_lip_width/2, pwr_panel_tall-7 ]) cylinder(d=TI30_mount_diameter, h=7);
@@ -332,6 +336,62 @@ module part_hanging_power_hub() {
 
     // add the fuseblock
     translate([ 0, 0+panel_thick, centerline_for_fuse ]) rotate([ -90, 0, 0 ]) fuse_holder_block();
+}
+
+/*
+ * part_hanging_power_hub() generates a hanging sidewall with power components
+ * and 3-to-5 wire servo converter.  note this does not have terminal block
+ * for heavy power wiring (probably any car that needs the servo converter also
+ * has a small capacity battery so needs a secondary battery on top plate...) 
+ */
+
+module part_hanging_power_hub_servo() {
+    panel_wide = pwrhub_mount_sep + 20;
+    panel_thick = 3;
+    body_lip_width = 15;     
+
+    centerline_for_tmnblk = (pwr_panel_tall/2) - 4;
+    centerline_for_switches = pwr_panel_tall/2;
+    centerline_for_fuse = 3;
+
+    // pwrhub_mount_sep = 120;  // (this now in mainline)
+
+    difference() {
+        union() {
+            translate([ -panel_wide/2, 0, pwr_panel_tall-panel_thick ]) cube([ panel_wide, body_lip_width, panel_thick ]);
+            translate([ -panel_wide/2, 0, 0 ]) cube([ panel_wide, panel_thick, pwr_panel_tall ]);
+            translate([ 42, panel_thick+1, centerline_for_tmnblk ]) rotate([ 90, 0, 180 ]) component_smallmint_protoboard("adds");
+            translate([ -50, panel_thick+1, centerline_for_tmnblk ]) rotate([ 90, 0, 0 ]) roundedbox(37, 32, 2, 1); // for ESC
+
+            // tubes for mounting holes (threaded inserts)
+            translate([ pwrhub_mount_sep/2, body_lip_width/2, pwr_panel_tall-7 ]) cylinder(d=TI30_mount_diameter, h=7);
+            translate([ -pwrhub_mount_sep/2, body_lip_width/2, pwr_panel_tall-7 ]) cylinder(d=TI30_mount_diameter, h=7);
+        }    
+
+        if (switch == "Toggle Switch (notch up)") {
+            translate([ -15, 0, centerline_for_switches ]) rotate([ 90, 0, 180 ]) component_mini_toggle_switch("holes");
+            translate([ +5, 0, centerline_for_switches ]) rotate([ 90, 0, 180 ]) component_mini_toggle_switch("holes");
+        } else if (switch == "Toggle Switch (notch down)") {
+            translate([ -15, 0+panel_thick, centerline_for_switches ]) rotate([ -90, 0, 180 ]) component_mini_toggle_switch("holes");
+            translate([ +5, 0+panel_thick, centerline_for_switches ]) rotate([ -90, 0, 180 ]) component_mini_toggle_switch("holes");
+        } else {
+            translate([ +5, 0, centerline_for_switches+2 ]) rotate([ -90, 90, 0 ]) component_boat_rocker_switch("holes");
+            translate([ -15, 0, centerline_for_switches+2 ]) rotate([ -90, 90, 0 ]) component_boat_rocker_switch("holes");
+        }
+
+        // holes for permaproto board        
+        translate([ 42, panel_thick+1, centerline_for_tmnblk ]) rotate([ 90, 0, 180 ]) component_smallmint_protoboard("holes");
+
+        // hole for fuseblock
+        translate([ -5, 0, centerline_for_fuse ]) rotate([ -90, 0, 0 ]) hole_for_fuseblock();
+
+        // mounting holes
+        translate([ pwrhub_mount_sep/2, body_lip_width/2, pwr_panel_tall-7.1 ]) cylinder(d=TI30_through_hole_diameter, h=7.2);
+        translate([ -pwrhub_mount_sep/2, body_lip_width/2, pwr_panel_tall-7.1 ]) cylinder(d=TI30_through_hole_diameter, h=7.2);
+    }
+
+    // add the fuseblock
+    translate([ -5, 0+panel_thick, centerline_for_fuse ]) rotate([ -90, 0, 0 ]) fuse_holder_block();
 }
 
 // note this is returned centered on y axis, 
