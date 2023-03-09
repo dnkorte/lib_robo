@@ -140,7 +140,7 @@ module component_battbox_lipo_1200_flat_lid(mode="holes") {
 
 batt_lipo_500_width = 30;
 batt_lipo_500_length = 37;
-batt_lipo_500_thick = 5.0;
+batt_lipo_500_thick = 4.5;
 
 module component_battbox_lipo_500_flat(mode="holes") {
     bolt_x = ((batt_lipo_500_width+1)/2) + 2.5;
