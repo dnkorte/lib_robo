@@ -285,6 +285,9 @@ module component_terminal_block_2to4(mode="holes") {
 }
 
 pwr_panel_tall = 40;
+pwr_panel_extra_height = 10;
+pwr_panel_extension_width = 75;
+pwr_panel_tall_dualfuse = pwr_panel_tall + pwr_panel_extra_height;
 
 /*
  * part_hanging_power_hub() generates a hanging sidewall with power components
@@ -338,34 +341,43 @@ module part_hanging_power_hub() {
     translate([ 0, 0+panel_thick, centerline_for_fuse ]) rotate([ -90, 0, 0 ]) fuse_holder_block();
 }
 
+
 /*
- * part_hanging_power_hub() generates a hanging sidewall with power components
- * and 3-to-5 wire servo converter.  note this does not have terminal block
- * for heavy power wiring (probably any car that needs the servo converter also
- * has a small capacity battery so needs a secondary battery on top plate...) 
+ * part_hanging_power_hub_2fuses() generates a hanging sidewall with 2 fuses
+ * and wago 5-terminal block for ground wires, plus switches and fuses.
+ * it has a shortened front hanging section so that it will clear the front wheels
+ * when steering
  */
 
-module part_hanging_power_hub_servo() {
-    panel_wide = pwrhub_mount_sep + 20;
+module part_hanging_power_hub_2fuses() {
+
+    //panel_wide = pwrhub_mount_sep + 20;
+    mountbracket_wide = pwrhub_mount_sep + 20;
+    panel_wide = 120;
     panel_thick = 3;
     body_lip_width = 15;     
 
-    centerline_for_tmnblk = (pwr_panel_tall/2) - 4;
-    centerline_for_switches = pwr_panel_tall/2;
+    centerline_for_tmnblk = (pwr_panel_tall/2) - 4 + pwr_panel_extra_height;
+    centerline_for_switches = (pwr_panel_tall/2) + pwr_panel_extra_height;
     centerline_for_fuse = 3;
-
-    // pwrhub_mount_sep = 120;  // (this now in mainline)
 
     difference() {
         union() {
-            translate([ -panel_wide/2, 0, pwr_panel_tall-panel_thick ]) cube([ panel_wide, body_lip_width, panel_thick ]);
-            translate([ -panel_wide/2, 0, 0 ]) cube([ panel_wide, panel_thick, pwr_panel_tall ]);
-            translate([ 42, panel_thick+1, centerline_for_tmnblk ]) rotate([ 90, 0, 180 ]) component_smallmint_protoboard("adds");
-            translate([ -50, panel_thick+1, centerline_for_tmnblk ]) rotate([ 90, 0, 0 ]) roundedbox(37, 32, 2, 1); // for ESC
+            translate([ -mountbracket_wide/2, 0, pwr_panel_tall_dualfuse-panel_thick ]) cube([ mountbracket_wide, body_lip_width, panel_thick ]);
 
-            // tubes for mounting holes (threaded inserts)
-            translate([ pwrhub_mount_sep/2, body_lip_width/2, pwr_panel_tall-7 ]) cylinder(d=TI30_mount_diameter, h=7);
-            translate([ -pwrhub_mount_sep/2, body_lip_width/2, pwr_panel_tall-7 ]) cylinder(d=TI30_mount_diameter, h=7);
+            if (pwrhub_side == "right") {
+            translate([ -(mountbracket_wide/2), 0, pwr_panel_extra_height ]) 
+                cube([ panel_wide, panel_thick, pwr_panel_tall ]);
+                translate([ 38, panel_thick+1, centerline_for_tmnblk ]) rotate([ 90, 0, 0 ]) color([1,0,0]) roundedbox(20, 30, 2, 1); // for Wago
+                translate([ -50, panel_thick+1, centerline_for_tmnblk ]) rotate([ 90, 0, 0 ]) color([1,0,0]) roundedbox(37, 32, 2, 1); // for ESC
+            } else {
+            translate([ (mountbracket_wide/2) - panel_wide, 0, pwr_panel_extra_height ]) 
+                cube([ panel_wide, panel_thick, pwr_panel_tall ]);
+                translate([ -38, panel_thick+1, centerline_for_tmnblk ]) rotate([ 90, 0, 0 ]) color([1,0,0]) roundedbox(20, 30, 2, 1); // for Wago
+                translate([ +50, panel_thick+1, centerline_for_tmnblk ]) rotate([ 90, 0, 0 ]) color([1,0,0]) roundedbox(37, 32, 2, 1); // for ESC
+            }
+
+            translate([ -pwr_panel_extension_width/2, 0, 0 ]) cube([ pwr_panel_extension_width, panel_thick, pwr_panel_extra_height ]);
         }    
 
         if (switch == "Toggle Switch (notch up)") {
@@ -379,23 +391,28 @@ module part_hanging_power_hub_servo() {
             translate([ -15, 0, centerline_for_switches+2 ]) rotate([ -90, 90, 0 ]) component_boat_rocker_switch("holes");
         }
 
-        // holes for permaproto board        
-        translate([ 42, panel_thick+1, centerline_for_tmnblk ]) rotate([ 90, 0, 180 ]) component_smallmint_protoboard("holes");
 
-        // hole for fuseblock
-        translate([ -5, 0, centerline_for_fuse ]) rotate([ -90, 0, 0 ]) hole_for_fuseblock();
+        // holes for fuseblocks
+        translate([ -15, 0, centerline_for_fuse ]) rotate([ -90, 0, 0 ]) hole_for_fuseblock();
+        translate([ 20, 0, centerline_for_fuse ]) rotate([ -90, 0, 0 ]) hole_for_fuseblock();
 
         // mounting holes
-        translate([ pwrhub_mount_sep/2, body_lip_width/2, pwr_panel_tall-7.1 ]) cylinder(d=TI30_through_hole_diameter, h=7.2);
-        translate([ -pwrhub_mount_sep/2, body_lip_width/2, pwr_panel_tall-7.1 ]) cylinder(d=TI30_through_hole_diameter, h=7.2);
+        translate([ pwrhub_mount_sep/2, body_lip_width/2, pwr_panel_tall_dualfuse-7.1 ]) cylinder(d=TI30_through_hole_diameter, h=7.2);
+        translate([ -pwrhub_mount_sep/2, body_lip_width/2, pwr_panel_tall_dualfuse-7.1 ]) cylinder(d=TI30_through_hole_diameter, h=7.2);
     }
 
-    // add the fuseblock
-    translate([ -5, 0+panel_thick, centerline_for_fuse ]) rotate([ -90, 0, 0 ]) fuse_holder_block();
+    // add the fuseblocks
+    translate([ -15, 0+panel_thick, centerline_for_fuse ]) rotate([ -90, 0, 0 ]) fuse_holder_block();
+    translate([ 20, 0+panel_thick, centerline_for_fuse ]) rotate([ -90, 0, 0 ]) fuse_holder_block();
 }
 
-// note this is returned centered on y axis, 
-// but positioned so left edge (the "back" edge) is at -20mm (so it can be placed at the edge of chassis plate)
+
+
+/* 
+ * component_dukedoks_front_stub()
+ * note this is returned centered on y axis,
+ * but positioned so left edge (the "back" edge) is at -20mm (so it can be placed at the edge of chassis plate)
+ */
 module component_dukedoks_front_stub(stub_thick = 4) {
     mount_sep_x = 6;
     mount_sep_y = 54;
