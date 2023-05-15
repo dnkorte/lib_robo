@@ -70,9 +70,9 @@ lid_R_y = +(box_width/2);
  */
 
 
-module lip() {
-    lip_box_length = box_length - (2 * (body_wall_thickness + lid_clearance));
-    lip_box_width = box_width - (2 * (body_wall_thickness + lid_clearance));
+module lip(len=box_length, wid=box_width) {
+    lip_box_length = len - (2 * (body_wall_thickness + lid_clearance));
+    lip_box_width = wid - (2 * (body_wall_thickness + lid_clearance));
     lip_inner_x = lip_box_length - (2 * lid_lip_thickness);
     lip_inner_y = lip_box_width - (2 * lid_lip_thickness);
     TI30_mount_radius = TI30_mount_diameter / 2;
@@ -117,9 +117,9 @@ module lip() {
  * internal room).  the lip raises to the height specified as parameter
  * and the "outer dimension" of the box is retained for xxx
  */
-module lip_tall(extra_height = 0) {
-    lip_box_length = box_length - (2 * (body_wall_thickness + lid_clearance));
-    lip_box_width = box_width - (2 * (body_wall_thickness + lid_clearance));
+module lip_tall(extra_height = 0, len=box_length, wid=box_width) {
+    lip_box_length = len - (2 * (body_wall_thickness + lid_clearance));
+    lip_box_width = wid - (2 * (body_wall_thickness + lid_clearance));
     lip_inner_x = lip_box_length - (2 * lid_lip_thickness);
     lip_inner_y = lip_box_width - (2 * lid_lip_thickness);
     TI30_mount_radius = TI30_mount_diameter / 2;
@@ -213,12 +213,12 @@ module SAMPLE_box() {
 // copy this module into the mainline generator for this project, and
 // add calls to all functions needed to generate needed holes or add-on parts
 
-module SAMPLE_lid() {  
+module SAMPLE_lid(len=box_length, wid=box_width) {  
     difference() {
 
         union() {
-            roundedbox(box_length, box_width, box_corner_radius, lid_thickness);
-            translate([0, 0, lid_thickness]) lip();  
+            roundedbox(len, wid, box_corner_radius, lid_thickness);
+            translate([0, 0, lid_thickness]) lip(len, wid);  
 
             /*
              ************************************************************************

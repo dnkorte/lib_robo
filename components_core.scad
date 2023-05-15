@@ -175,7 +175,7 @@ module TI25_mount(mount_height = TI25_default_height) {
 module TI25a_mount(mode="adds", mount_height = TI25_default_height) {  
     if (mode == "holes") {
         if (TI25_use_threaded_insert) {
-            translate([ 0, 0, -(mount_hole_extra_depth+0.1) ]) 
+            translate([ 0, 0, -(mount_hole_extra_depth+1) ]) 
                 cylinder(r=(TI25_through_hole_diameter / 2), h=mount_height + (mount_hole_extra_depth+4));
         } else {
             translate([ 0, 0, -(mount_hole_extra_depth+0.1) ]) 

@@ -634,6 +634,52 @@ module component_feather_lifted(mode, lift=17) {
 
 /*
  * ********************************************************************************
+ * this makes a base for adafruit reverse feather (TFT)
+ * this is similar to normal feather but 2 of its mounting holes are only 2mm
+ *     diameter, so the screw mounts are replaced by pegs in this board mount
+ *
+ * its base is 1mm thick, and 52 x 25mm (note feather itself is 50.8 x 22.86 mm)
+ * it has 4 M2.5 threaded insert mounts 45.5mm x 25.4mm spacing
+ *  
+ * this is generated in xy plane, centered at origin, box outside skin is at z=0 (moving "into" box has +z)
+ * it is generated in "landscape" shape
+ * it should be "added" to design, there are no holes needed at placement level
+ *
+ * purchase: https://www.adafruit.com/product/5345
+ * ********************************************************************************
+ */
+
+module component_reverse_feather(mode="adds", mount_height=TI25_default_height) {
+
+    // the "mount" itself handles the add/holes issues
+
+    if (mode == "holes") {
+        // make clearance for esp32 module
+        translate([ -(board_feather_length/2), -(17/2), 1 ]) cube([ 8, 17, mount_height ]);
+    }
+
+    if (mode == "adds") {
+        roundedbox(board_feather_length, board_feather_width, 2, 1);
+        translate([ -(board_feather_screw_x/2), -(board_feather_screw_y/2), 1]) {
+            cylinder( d=5, h=mount_height);
+            cylinder( d=1.8, h=mount_height+2);
+        } 
+        translate([ -(board_feather_screw_x/2), +(board_feather_screw_y/2), 1]) {
+            cylinder( d=5, h=mount_height);
+            cylinder( d=1.8, h=mount_height+2);
+        }
+        translate([ +(board_feather_screw_x/2), -(board_feather_screw_y/2), 1]) TI25a_mount(mode, mount_height=mount_height);
+        translate([ +(board_feather_screw_x/2), +(board_feather_screw_y/2), 1]) TI25a_mount(mode, mount_height=mount_height); 
+        
+        translate([0, 1, 0]) linear_extrude(2) text("Feather", 
+            size=6, halign="center", font = "Liberation Sans:style=Bold");
+        translate([0, -8, 0]) linear_extrude(2) text("M2.5", 
+            size=6, halign="center", font = "Liberation Sans:style=Bold");
+    }
+}
+
+/*
+ * ********************************************************************************
  * this makes a base for adafruit feather doubler protoboard
  * its base is 1mm thick, and 49 x 52mm (note the doubler itself is 45.72 x 46.99 mm)
  * it has 4 M2.5 threaded insert mounts + 2 support mounts between "boards"
