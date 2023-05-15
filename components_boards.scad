@@ -655,18 +655,22 @@ module component_reverse_feather(mode="adds", mount_height=TI25_default_height) 
 
     if (mode == "holes") {
         // make clearance for esp32 module
-        translate([ -(board_feather_length/2), -(17/2), 1 ]) cube([ 8, 17, mount_height ]);
+        translate([ -(board_feather_length/2), -(16.5/2), 1 ]) cube([ 8, 16.5, mount_height+2.5 ]);
+
+        translate([ +(board_feather_screw_x/2), -(board_feather_screw_y/2), 1]) TI25a_mount(mode, mount_height=mount_height);
+        translate([ +(board_feather_screw_x/2), +(board_feather_screw_y/2), 1]) TI25a_mount(mode, mount_height=mount_height); 
     }
 
     if (mode == "adds") {
         roundedbox(board_feather_length, board_feather_width, 2, 1);
+
         translate([ -(board_feather_screw_x/2), -(board_feather_screw_y/2), 1]) {
             cylinder( d=5, h=mount_height);
-            cylinder( d=1.8, h=mount_height+2);
+            cylinder( d1=1.8, d2=1.6, h=mount_height+2);
         } 
         translate([ -(board_feather_screw_x/2), +(board_feather_screw_y/2), 1]) {
             cylinder( d=5, h=mount_height);
-            cylinder( d=1.8, h=mount_height+2);
+            cylinder( d1=1.8, d2=1.6, h=mount_height+2);
         }
         translate([ +(board_feather_screw_x/2), -(board_feather_screw_y/2), 1]) TI25a_mount(mode, mount_height=mount_height);
         translate([ +(board_feather_screw_x/2), +(board_feather_screw_y/2), 1]) TI25a_mount(mode, mount_height=mount_height); 
