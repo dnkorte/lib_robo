@@ -648,33 +648,47 @@ module component_feather_lifted(mode, lift=17) {
  * purchase: https://www.adafruit.com/product/5345
  * ********************************************************************************
  */
+board_feather_rev_pins_y = 19.05;
+sidewall_sep = 24;
+wifi_sep = 16.5;
 
 module component_reverse_feather(mode="adds", mount_height=TI25_default_height) {
 
     // the "mount" itself handles the add/holes issues
 
     if (mode == "holes") {
-        // make clearance for esp32 module
-        translate([ -(board_feather_length/2), -(16.5/2), 1 ]) cube([ 8, 16.5, mount_height+2.5 ]);
+        // make clearance for esp32 module (inside edges of peg pillars are flattened out)
+        translate([ -(board_feather_length/2)-0.1, -(wifi_sep/2), 1.1 ]) cube([ 8, wifi_sep, mount_height+2.5 ]);
 
+        // make clearance for board edge rims
+        translate([ -(board_feather_length/2)-0.1, -(sidewall_sep/2), mount_height+1 ]) cube([ 8, sidewall_sep, mount_height+2.5 ]);
+
+
+        // and holes for the 2 threaded insert mounts
         translate([ +(board_feather_screw_x/2), -(board_feather_screw_y/2), 1]) TI25a_mount(mode, mount_height=mount_height);
         translate([ +(board_feather_screw_x/2), +(board_feather_screw_y/2), 1]) TI25a_mount(mode, mount_height=mount_height); 
     }
 
     if (mode == "adds") {
-        roundedbox(board_feather_length, board_feather_width, 2, 1);
+        roundedbox(board_feather_length, board_feather_width+4, 2, 1);
 
-        translate([ -(board_feather_screw_x/2), -(board_feather_screw_y/2), 1]) {
-            cylinder( d=5, h=mount_height);
-            cylinder( d1=1.8, d2=1.6, h=mount_height+2);
-        } 
-        translate([ -(board_feather_screw_x/2), +(board_feather_screw_y/2), 1]) {
-            cylinder( d=5, h=mount_height);
-            cylinder( d1=1.8, d2=1.6, h=mount_height+2);
-        }
+        // support pillars for small end (wifi end has M2 bolt holes)
+        //translate([ -(board_feather_screw_x/2), -(board_feather_rev_pins_y/2), 1]) {
+        //    cylinder( d1=7, d2=5, h=mount_height+2);
+        //    cylinder( d1=1.8, d2=1.6, h=mount_height+1);
+        //} 
+        //translate([ -(board_feather_screw_x/2), +(board_feather_rev_pins_y/2), 1]) {
+        //    cylinder( d1=7, d2=5, , h=mount_height+2);
+        //    cylinder( d1=1.8, d2=1.6, h=mount_height+1);
+        //}
+
+        translate([ -(board_feather_length/2), -(board_feather_width+4)/2, 1 ]) cube([ 6, board_feather_width+4, mount_height+2 ]);
+
+        // standard threaded insert mounts for other end
         translate([ +(board_feather_screw_x/2), -(board_feather_screw_y/2), 1]) TI25a_mount(mode, mount_height=mount_height);
         translate([ +(board_feather_screw_x/2), +(board_feather_screw_y/2), 1]) TI25a_mount(mode, mount_height=mount_height); 
         
+        // text
         translate([0, 1, 0]) linear_extrude(2) text("Feather", 
             size=6, halign="center", font = "Liberation Sans:style=Bold");
         translate([0, -8, 0]) linear_extrude(2) text("M2.5", 
