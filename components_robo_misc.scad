@@ -621,3 +621,36 @@ module draw_door_catch(direction="LC") {
         translate([ hole2_x, 0, -0.1 ]) cylinder( d=M2_throughhole_dia, h=arm_thick + 0.2);
     }
 }
+
+module nunchuk_hanger() {
+    slot_width = 14;
+    cap_slot_width = 18;
+    body_length = 28;
+    body_width = slot_width + 9;
+    body_outer_depth = 18;
+    body_thickness = 2;
+    body_angle = 30;    // degrees
+    mask_size = 50;
+
+    side_guide_height = 16;
+    side_guide_len = 30;
+    side_guide_thick = 3;
+    side_guide_inner_sep = 38;
+
+    difference() {
+        translate([ 0, 0, -13 ]) rotate([ body_angle, 0, 0 ]) union() {
+            difference() {
+                translate([ -body_width/2, 0, 0 ]) cube([ body_width, body_length, body_outer_depth ]);
+                translate([ 0, ((body_length+5)/2)+10, -0.1 ]) roundedbox( slot_width, body_length+5, slot_width/2, body_outer_depth+0.2 );
+                translate([ 0, ((body_length+5)/2)+2, -0.1 ]) roundedbox( cap_slot_width, body_length+5, cap_slot_width/2, body_outer_depth-2 );
+            }
+        }
+        translate([ -mask_size/2, -mask_size/2, -mask_size ]) cube([ mask_size, mask_size, mask_size ]);
+    }
+
+    // now add side guides
+    //translate([ -(side_guide_inner_sep/2)-(side_guide_thick/2), -mask_size/2, 0 ]) 
+    //    cube([ side_guide_thick, side_guide_len, side_guide_height ]);
+    //translate([ (side_guide_inner_sep/2)-(side_guide_thick/2), -mask_size/2, 0 ]) 
+    //    cube([ side_guide_thick, side_guide_len, side_guide_height ]);
+}

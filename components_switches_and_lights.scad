@@ -773,7 +773,7 @@ module beeper_sound_hole() {
  * purchase: https://www.adafruit.com/product/1426
  */
 
-module part_3neopixel_strip_bezel() {
+module part_3neopixel_strip_bezel(openslotWanted="N") {
      translate([ 0, 0, 5.5 ]) rotate([ 180, 0, 0 ]) difference() {
         union() {
             roundedbox( 156+10, 14, 6, 5.5);
@@ -783,6 +783,9 @@ module part_3neopixel_strip_bezel() {
         translate([ 0, 0, -0.1 ]) roundedbox( 156, 11, 1, 4.6 );
         translate([ -40, 10, -0.1 ]) cylinder( d=M3_throughhole_dia, h=6 );
         translate([  40, 10, -0.1 ]) cylinder( d=M3_throughhole_dia, h=6 );
+        //if (openslotWanted == "Y") {
+            translate([ 0, 0, 0 ]) roundedbox( 150+2, 7, 1, 5.2 );
+        //}
     }
 }
 

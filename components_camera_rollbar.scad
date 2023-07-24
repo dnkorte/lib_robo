@@ -309,6 +309,22 @@ module part_openmv_pillar(wantRollbar=false) {
         translate([ 0, -10, 101 ]) rotate([ (-90-cameraDownAngle), 0, 0 ]) component_openmv_mount();
     }
 
+    if (cameraDownAngle == 20) {
+        translate([ 0, -10, 101 ]) rotate([ (-90-cameraDownAngle), 0, 0 ]) component_openmv_mount();
+    }
+
+    if (cameraDownAngle == 25) {
+        translate([ 0, -7.5, 105 ]) rotate([ (-90-cameraDownAngle), 0, 0 ]) component_openmv_mount();
+    }
+
+    if (cameraDownAngle == 30) {
+        translate([ 0, -6, 105 ]) rotate([ (-90-cameraDownAngle), 0, 0 ]) component_openmv_mount();
+    }
+
+    if (cameraDownAngle == 35) {
+        translate([ 0, -5, 108 ]) rotate([ (-90-cameraDownAngle), 0, 0 ]) component_openmv_mount();
+    }
+
     // mount bracket for accessory (typically esp32cam OpenMVcam or RPicam for viewing or obstacle avoidance) 
     if (cameraPillarAccessory == "OpenMV Cam") {
         translate([ 0, -2, 38 ]) rotate([ -90, 0, 0 ]) component_openmv_mount();
