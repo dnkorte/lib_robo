@@ -771,9 +771,13 @@ module beeper_sound_hole() {
 /*
  * part_3neopixel_strip_bezel() makes a bezel to hold down 3 neopixel strips
  * purchase: https://www.adafruit.com/product/1426
+ * Note: the "O/utdoor" version has an open slot to expose the LEDS directly, for
+ *      better visibility outdoors; the "I/ndoor" version has a thin layer of material
+ *      over the LEDs to provide a more attractive appearance (diffused).  
+ * If using the "Indoor" version, this should be printed in White PLA 
  */
 
-module part_3neopixel_strip_bezel(openslotWanted="N") {
+module part_3neopixel_strip_bezel(openslotWanted="I") {
      translate([ 0, 0, 5.5 ]) rotate([ 180, 0, 0 ]) difference() {
         union() {
             roundedbox( 156+10, 14, 6, 5.5);
@@ -783,9 +787,9 @@ module part_3neopixel_strip_bezel(openslotWanted="N") {
         translate([ 0, 0, -0.1 ]) roundedbox( 156, 11, 1, 4.6 );
         translate([ -40, 10, -0.1 ]) cylinder( d=M3_throughhole_dia, h=6 );
         translate([  40, 10, -0.1 ]) cylinder( d=M3_throughhole_dia, h=6 );
-        //if (openslotWanted == "Y") {
-            translate([ 0, 0, 0 ]) roundedbox( 150+2, 7, 1, 5.2 );
-        //}
+        if (openslotWanted == "O") {
+            translate([ 0, 1.8, 0 ]) roundedbox( 150+2, 5.4, 1, 6 );
+        }
     }
 }
 
