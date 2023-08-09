@@ -192,6 +192,27 @@ module part_beltclip() {
 }
 
 
+module part_lanyard_clip() {
+    beltclip_y = 50;
+    beltclip_x = 30;
+    standoff_y = 25;
+    standoff_thick = 7;
+    beltclip_thick = 2;
+
+    lanyard_hole_x = 16;
+    lanyard_hole_y = 4;
+    lanyard_from_edge = 6;
+
+    difference() {
+        union() {
+            roundedbox( beltclip_x, beltclip_y, 3, beltclip_thick);
+            translate([ 0, -(beltclip_y/2)+(standoff_y/2), beltclip_thick ]) roundedbox( beltclip_x, standoff_y, 3, standoff_thick);
+        }
+        translate([ 0, -(beltclip_y/2)+(standoff_y/2), -0.1 ]) component_beltclip_mount(TI30_through_hole_diameter);
+        translate([ 0, (beltclip_y/2) - lanyard_from_edge, -0.1 ]) roundedbox( lanyard_hole_x, lanyard_hole_y, lanyard_hole_y/2, beltclip_thick+0.2);
+    }
+}
+
 module component_beltclip_mount(hole_dia=M3_throughhole_dia) {
     translate([ -beltclip_hole_sep_x/2, -beltclip_hole_sep_y/2, 0 ]) cylinder( d=hole_dia, h=12);
     translate([ -beltclip_hole_sep_x/2, beltclip_hole_sep_y/2, 0 ]) cylinder( d=hole_dia, h=12);
@@ -647,10 +668,44 @@ module nunchuk_hanger() {
         }
         translate([ -mask_size/2, -mask_size/2, -mask_size ]) cube([ mask_size, mask_size, mask_size ]);
     }
+}
 
-    // now add side guides
-    //translate([ -(side_guide_inner_sep/2)-(side_guide_thick/2), -mask_size/2, 0 ]) 
-    //    cube([ side_guide_thick, side_guide_len, side_guide_height ]);
-    //translate([ (side_guide_inner_sep/2)-(side_guide_thick/2), -mask_size/2, 0 ]) 
-    //    cube([ side_guide_thick, side_guide_len, side_guide_height ]);
+
+cradle_length = 40;
+cradle_length_wire_end_support = 28;
+cradle_bar_thickness = 8;
+cradle_cap_width = 32;
+cradle_cap_mount_sep = cradle_length - cradle_bar_thickness;
+cradle_depth = 36;  // thickness of nunchuk at fat point (was 34)
+cradle_depth_wire_end = 24;  // thickness of nunchuk at skinny end (was 22)
+
+module nunchuk_cradle() {
+    rotate([ 0, 0, 25 ]) difference() {
+        roundedbox( cradle_length, cradle_bar_thickness, cradle_bar_thickness/2, cradle_depth );
+        translate([ -cradle_cap_mount_sep/2, 0, cradle_depth - 7.9 ]) cylinder( d= M3_selftap_dia, h=8);
+        translate([ +cradle_cap_mount_sep/2, 0, cradle_depth - 7.9 ]) cylinder( d= M3_selftap_dia, h=8);
+    }
+    //translate([ -33,-5, 0 ]) rotate([ 0, 0, -15 ]) 
+    //    roundedbox( cradle_length_wire_end_support, cradle_bar_thickness, cradle_bar_thickness/2, cradle_depth_wire_end );
+    translate([ -37,-11, 0 ]) rotate([ 0, 0, -15 ]) 
+        roundedbox( cradle_length_wire_end_support, cradle_bar_thickness, cradle_bar_thickness/2, cradle_depth_wire_end ); // was y -8
+}
+
+module nunchuk_cradle_cap() {
+    difference() {
+        roundedbox( cradle_length, cradle_cap_width, cradle_bar_thickness/2,  3 ); 
+        translate([ -cradle_cap_mount_sep/2, -(cradle_cap_width/2) + (cradle_bar_thickness/2), -0.1 ]) 
+            cylinder( d= M3_throughhole_dia, h=8);
+        translate([ +cradle_cap_mount_sep/2, -(cradle_cap_width/2) + (cradle_bar_thickness/2), -0.1 ]) 
+            cylinder( d= M3_throughhole_dia, h=8);   
+    }
+    translate([ -(cradle_length-3)/2, (cradle_cap_width-cradle_bar_thickness+5)/2, 3 ]) rotate([ 0, 0, -90 ]) 
+        prism_lwh(cradle_cap_width-cradle_bar_thickness-2, cradle_length-2, 8);
+    }
+
+module prism_lwh(l, w, h) {
+   polyhedron(
+           points=[[0,0,0], [l,0,0], [l,w,0], [0,w,0], [0,w,h], [l,w,h]],
+           faces=[[0,1,2,3],[5,4,3,2],[0,4,5,1],[0,3,4],[5,2,1]]
+           );
 }
